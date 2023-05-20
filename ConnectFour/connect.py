@@ -1,59 +1,31 @@
-import numpy as np
-import pygame
-import sys
-import math
 
+import pygame       #Pygame for GUI
+import sys          #Sys to control system-specific parameters and functions
+import math         #Math for math functions
+
+#Defining colors in RGB format
 BLUE = (0,0,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
 YELLOW = (255,255,0)
+
+#Defining board dimensions
 ROW_COUNT = 6
 COLUMN_COUNT = 7
 
-def create_board():
-    board = np.zeros((ROW_COUNT,COLUMN_COUNT))
-    return board
-
-def drop_piece(board, row, col, piece):
-    board[row][col] = piece
-
-def is_valid_location(board, col):
-    return board[ROW_COUNT-1][col] == 0
-
-def get_next_open_row(board, col):
-    for r in range(ROW_COUNT):
-        if board[r][col] ==0:
-            return r
-        
-def print_board():
-   print(np.flip(board, 0))
-
-def winning_move(board, piece):
-    #Check horizontal
-    for c in range(COLUMN_COUNT-3):
-        for r in range(ROW_COUNT):
-            if board[r][c] == piece and board[r] [c+1] == piece and board[r] [c+2] == piece and board[r] [c+3] == piece:
-                return True
-    
-    #Check vertical
-    for c in range(COLUMN_COUNT):
-        for r in range(ROW_COUNT-3):
-            if board[r][c] == piece and board[r+1] [c] == piece and board[r+2] [c] == piece and board[r+3] [c] == piece:
-                return True
-            
-    #Check positive diagonal
-    for c in range(COLUMN_COUNT-3):
-        for r in range(ROW_COUNT-3):
-            if board[r][c] == piece and board[r+1] [c+1] == piece and board[r+2] [c+2] == piece and board[r+3] [c+3] == piece:
-                return True
+#Function to create the intial game board using numpy. The board is a 2D array filled with zeroes.
+#Zero represents empty space.
 
 
-    #Check negative diagonal
-    for c in range(COLUMN_COUNT-3):
-        for r in range(3, ROW_COUNT):
-            if board[r][c] == piece and board[r-1] [c+1] == piece and board[r-2] [c+2] == piece and board[r-3] [c+3] == piece:
-                return True  
 
+
+
+
+#Function to get the lowest open row in chosen column. Takes the column the player chooses on the board.
+# It goes through each row of the column and returns the first empty row in it.
+
+
+#Function to draw the game board. It prints rectangles for the board and circles for the pieces.
 def draw_board(board):
     for c in range(COLUMN_COUNT):
         for r in range(ROW_COUNT):
@@ -68,17 +40,20 @@ def draw_board(board):
                 pygame.draw.circle(screen, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)      
     pygame.display.update()
 
+#Creates game board by calling the create_board function.
 board = create_board()
 print_board()
 game_over = False
 turn = 0
 
+#Initializes the pygame library.
 pygame.init()
 
 SQUARESIZE = 100
 width = COLUMN_COUNT * SQUARESIZE
 height = (ROW_COUNT+1) * SQUARESIZE
 size = (width, height)
+#Radius of the pieces.
 RADIUS = int(SQUARESIZE/2 - 5)
 
 
@@ -88,8 +63,9 @@ pygame.display.update()
 
 myfont = pygame.font.SysFont("Monospace", 75)
 
+#The main game loop.
 while not game_over:
-
+    #Checks for events(mose movement, game close, mouse click)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -109,6 +85,7 @@ while not game_over:
             #Ask player 1 for input
             if turn == 0:
                 posx = event.pos[0]
+                #Calculate the column where the piece will be dropped.
                 col = int(math.floor(posx/SQUARESIZE))
                 
                 if is_valid_location(board, col):
@@ -133,6 +110,13 @@ while not game_over:
                         label = myfont.render("Player 2 wins", 2, YELLOW)
                         screen.blit(label, (40,10))
                         game_over = True
+
+            
+            if is_tie(board):
+                label = myfont.render("It's a tie!", 1, (255,255,255))
+                screen.blit(label, (40,10))
+                game_over = True
+
 
             print_board()
             draw_board(board)
