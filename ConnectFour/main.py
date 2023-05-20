@@ -1,3 +1,6 @@
+import pygame
+import sys
+import math
 from game_logic import Game
 from game_interface import GameInterface
 from game_constants import *
@@ -9,21 +12,25 @@ def main():
     #Initializes the pygame library.
     pygame.init()
 
-    game_interface = GameInterface(game, SQUARESIZE, RADIUS, FONT_SIZE)
+    # Creates a Pygame window or screen
+    screen = pygame.display.set_mode(size)
 
+    game_interface = GameInterface(screen)
+    game_interface.draw_board(game.board)
+    
     game_over = False
     turn = 0
 
     #The main game loop.
     while not game_over:
-        #Checks for events(mose movement, game close, mouse click)
+        #Checks for events(mouse movement, game close, mouse click)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
             if event.type == pygame.MOUSEMOTION:
                 posx = event.pos[0]
-                game_interface.handle_mouse_motion(posx, turn)
+                game_interface.draw_piece(turn, posx)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = event.pos[0]
@@ -34,14 +41,14 @@ def main():
                     game.drop_piece(row, col, turn+1)
 
                     if game.winning_move(turn+1):
-                        game_interface.render_win_message(turn+1)
+                        game_interface.draw_winning_message(turn+1)
                         game_over = True
 
                 if game.is_tie():
-                    game_interface.render_tie_message()
+                    game_interface.draw_tie_message()
                     game_over = True
 
-                game_interface.draw_board()
+                game_interface.draw_board(game.board)
                 turn += 1
                 turn = turn % 2
 
