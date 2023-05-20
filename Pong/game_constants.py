@@ -1,0 +1,26 @@
+# Window settings
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+WINDOW_BG_COLOR = "black"
+
+# Slider settings
+SLIDER_SPEED = 0
+SLIDER_SHAPE = "square"
+SLIDER_COLOR = "white"
+SLIDER_STRETCH_WID = 5
+SLIDER_STRETCH_LEN = 1
+SLIDER_A_START_POS = -350
+SLIDER_B_START_POS = 350
+
+# Ball settings
+BALL_SPEED = 0
+BALL_SHAPE = "square"
+BALL_COLOR = "white"
+BALL_START_POS = (0, 0)
+BALL_DX = 0.2
+BALL_DY = 0.2
+
+# Score settings
+SCORE_FONT = ("Courier", 24, "normal")
+SCORE_A_START = 0
+SCORE_B_START = 0
